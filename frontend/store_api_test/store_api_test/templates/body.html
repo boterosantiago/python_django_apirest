@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <title>sanbope | {% block title %} {% endblock %}</title>
+</head>
+
+<body style="background-repeat: repeat;
+background-size: cover;
+height: 100vh;
+padding:0;
+margin:0;">
+    <h1 style="background-color: darkcyan; color: white; text-align: center; padding: 5px; margin: 0;">Sanbope APIREST Test</h1>
+    <div style="background-color: #087AA3; padding-bottom: 15px; padding-top: 15px; margin: 0;">
+        {% include "menu.html" %}
+    </div>
+    <div style="height: 100vh; background-color: #DEDEDE; padding: 5px; margin: 0;">
+        {% block content %} {% endblock %}
+    </div>
+    {% include "foot.html" %}
+</body>
+
+</html>
