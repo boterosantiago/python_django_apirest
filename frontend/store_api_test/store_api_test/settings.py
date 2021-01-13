@@ -54,7 +54,7 @@ ROOT_URLCONF = 'store_api_test.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/sanbo/Documents/Proyectos/Prueba Danilo/frontend/store_api_test/store_api_test/templates'],
+        'DIRS': ['C:/Users/sanbo/Documents/Proyectos/python_django_apirest/frontend/store_api_test/store_api_test/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

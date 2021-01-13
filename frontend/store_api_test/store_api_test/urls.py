@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from store_api_test.views import home, products
+from store_api_test.views import home, products, register
+from django.conf.urls import handler404
+
+handler404 = handler404 = 'store_api_test.views.not_found_404'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
     path('products/', products),
+    path('register/', register),
 ]

@@ -43,3 +43,15 @@ products = [
     },
     
 ]
+
+def product_auto_code():
+    code = 1
+    exist = True
+    while exist:
+        exist = False
+        for p in products:
+            if p['code'] == code:
+                exist = True
+                code += 1
+                break
+    return code

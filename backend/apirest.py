@@ -1,21 +1,16 @@
 from flask import Flask, jsonify, request
-from store import products
+from store import products, product_auto_code
+from users import user_auto_code, saveUser, loadUser, loadUserName, removeUser, listUsers, encodePassword, auth
 
 apirest = Flask(__name__)
-
 
 @apirest.route('/ping')
 def ping():
     return 'pong'
 
+# ProductsRest
 
-@apirest.route('/products')
-def getProducts():
-    return jsonify({'products': products})
-
-
-@apirest.route('/products/<int:id>')
-def getProductId(id):
+def getProduct(id):
     product = 'not found'
     for p in products:
         if(p['code'] == id):
@@ -23,9 +18,49 @@ def getProductId(id):
             continue
     return product
 
+@apirest.route('/products', methods=['GET', 'POST'])
+def addGetProducts():
+    if request.method == 'GET':
+        return jsonify({'products': products})
+    elif request.method == 'POST':
+        product = {
+            'code': product_auto_code(),
+            "name": request.json['name'],
+            'price': request.json['price'],
+            'stock': request.json['stock']
+        }
+
+        products.append(product)
+
+        return jsonify({'message': 'done', 'products': products})
+
+@apirest.route('/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def productId(id):
+    if request.method == 'GET':
+        return getProduct(id)
+    elif request.method == 'PUT':
+        product = getProduct(id)
+
+        if(product == 'not found'):
+            return jsonify({'message': 'not found'})
+
+        product['name'] = request.json['name']
+        product['price'] = request.json['price']
+        product['stock'] = request.json['stock']
+
+        return jsonify({'message': 'done', 'products': products})
+    elif request.method == 'DELETE':
+        product = getProduct(id)
+
+        if(product == 'not found'):
+            return jsonify({'message': 'not found'})
+
+        products.remove(product)
+
+        return jsonify({'message': 'done', 'products': products})
 
 @apirest.route('/products/<string:name>')
-def getProduct(name):
+def getProductName(name):
     products2 = [p for p in products if name.lower() in p['name'].lower()]
 
     results = len(products2)
@@ -34,45 +69,67 @@ def getProduct(name):
         return jsonify({'products': products2, "results": results})
     return 'not found'
 
+# UsersRest
 
-@apirest.route('/products', methods=['POST'])
-def addProduct():
-    product = {
-        'code': request.json['code'],
-        "name": request.json['name'],
-        'price': request.json['price'],
-        'stock': request.json['stock']
-    }
+@apirest.route('/users', methods=['GET', 'POST'])
+def addGetUsers():
+    if request.method == 'GET':
+        return jsonify({'users': listUsers()})
+    elif request.method == 'POST':
+        user = {
+            'code': user_auto_code(),
+            'user': request.json['user'],
+            'password': request.json['password'],
+            'admin': request.json['admin']
+        }
 
-    products.append(product)
+        saveUser(user)
 
-    return jsonify({'message': 'done', 'products': products})
+        return jsonify({'message': 'done', 'users': user})
 
+@apirest.route('/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def userId(id):
+    if request.method == 'GET':
+        us = loadUser(id)
+        if us is None:
+            return jsonify({'message': "None"})
+        else:
+            return  
+    elif request.method == 'PUT':
+        user = loadUser(id)
 
-@apirest.route('/products/<int:code>', methods=['PUT'])
-def editProduct(code):
-    product = getProductId(code)
+        if(user is None):
+            return jsonify({'message': 'not found'})
 
-    if(product == 'not found'):
-        return jsonify({'message': 'not found'})
+        user['user'] = request.json['user']
+        user['password'] = encodePassword(request.json['password'])
+        user['admin'] = request.json['admin']
 
-    #product['code'] = request.json['code']
-    product['name'] = request.json['name']
-    product['price'] = request.json['price']
-    product['stock'] = request.json['stock']
+        return jsonify({'message': 'done', 'users': user})
+    elif request.method == 'DELETE':
+        user = loadUser(id)
 
-    return jsonify({'message': 'done', 'products': products})
+        if(user == None):
+            return jsonify({'message': 'not found'})
 
-@apirest.route('/products/<int:code>', methods=['DELETE'])
-def  removeProduct(code):
-    product = getProductId(code)
+        removeUser(user)
 
-    if(product == 'not found'):
-        return jsonify({'message': 'not found'})
+        return jsonify({'message': 'done', 'products': listUsers()})
 
-    products.remove(product)
+@apirest.route('/users/<string:name>/<string:password>')
+def authenticate(name, password):
+    if auth(name, password):
+        return jsonify({'message': 'done'})
+    else:
+        return jsonify({'message': 'error'})
 
-    return jsonify({'message': 'done', 'products': products})
+@apirest.route('/users/<string:name>')
+def getUserName(name):
+    user = loadUserName(name)
+
+    if(user is not None):
+        return jsonify({'users': user, 'message': 'done'})
+    return jsonify({'message': 'not found'})
 
 if __name__ == '__main__':
     apirest.run(debug=True, port=5000)
