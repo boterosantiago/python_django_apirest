@@ -1,0 +1,30 @@
+{% extends "body.html" %} {% block title %}Product Detail{% endblock %} {% block content %}
+<div style="padding: 5px;
+display: flex;">
+    <div>
+        <img style="width: 500px;
+            margin-right: 20px;
+            max-height: 500px;
+            min-height: 500px;" src={{product.url}} />
+    </div>
+    <div style="font-size: 30px;">
+        <h1>{{product.name}}</h1>
+        <textarea readonly style="width: 500px;
+        background-color: #DEDEDE;
+        border: none;
+        flex: 1;
+        outline: none;
+        width: 90%;
+        min-height: 200px;
+        max-height: 200px;
+        font-size: 30px;" rows={{rows}}>{{product.description}}</textarea>
+        <h3>$ {{product.price}}</h3>
+        <h6>{{product.stock}}</h6>
+        <button style="background-color: darkgreen;
+        color: white;
+        font-size: 30;
+        height: 80px;
+        width: 200px;">BUY</button>
+    </div>
+</div>
+{% endblock %}

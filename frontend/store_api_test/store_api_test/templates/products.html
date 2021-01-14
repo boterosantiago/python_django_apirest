@@ -187,7 +187,7 @@
         }
     }
 </style>
-{% extends "body.html" %} {% block title %}Home{% endblock %} {% block content %}
+{% extends "body.html" %} {% block title %}Products{% endblock %} {% block content %}
 <section class="webdesigntuts-workshop">
     <!-- Copiado de https://cssdeck.com/labs/pulsating-css3-input-search-box -->
     <form action="/home/" method="GET">
@@ -201,16 +201,19 @@
 
     <div>
         {% for p in products %}
-        <div style="border: 2px solid black;
+        <div onclick='location.href="/product_detail/{{p.code}}";' style="border: 2px solid black;
         margin: 5px;
         padding: 5px;
         width: 10%;
         display: inline-block;">
             <img style="width: 100%;
             max-height: 200px;
+            min-height: 200px;
             padding-bottom: 10px;
-            border-bottom: 2px solid black;" src="https://assets.stickpng.com/images/5848152fcef1014c0b5e4967.png" />
-            <h1>{{p.name}}</h1>
+            border-bottom: 2px solid black;" src={{p.url}} />
+            <h3>
+                {% if p.name|length > 22 %} {{p.name|slice:"0:22"}}... {% else %} {{p.name}} {% endif %}
+            </h3>
             <h3>$ {{p.price}}</h3>
             <h6>Stock: {{p.stock}}</h6>
         </div>

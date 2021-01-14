@@ -1,4 +1,4 @@
-{% extends "body.html" %} {% block title %}Home{% endblock %} {% block content %}
+{% extends "body.html" %} {% block title %}Product Manager{% endblock %} {% block content %}
 <!DOCTYPE html>
 <html>
 
@@ -28,7 +28,6 @@
         }
         
         body {
-            background: url("/uploads/media/default/0001/01/b5edc1bad4dc8c20291c8394527cb2c5b43ee13c.jpeg") no-repeat center;
             background-size: cover;
         }
         
@@ -180,9 +179,13 @@
                 <input type="text" name="txtStock" placeholder="Stock">
             </div>
             <div class="checkbox">
-                <input type="checkbox" name="checkbox"><span>I agree to the <a href="privacy_policy">Privacy Poalicy for store.</a></span>
+                <input type="checkbox" name="check"><span>I agree to the <a href="/privacy_policy">Privacy Policy for store.</a></span>
             </div>
             <button style="max-width: 200;">Submit</button>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="images_uploader" style="border: none">
+            </form>
         </form>
     </div>
 </body>

@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
 import requests
 import json
+import datetime
 
 userLogged = None
 url = 'http://localhost:5000/'
 
 def not_found_404(request, exception):
     return render(request, 'not_found.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
 
 def home(request):
     try:
@@ -28,6 +33,17 @@ def home(request):
     except:
         return render(request, "products.html", {'products': result.text, "results": 0})
 
+def product_detail(request, code):
+    product = None
+    try:
+        result = requests.get(url+'products/'+str(code))
+        if result is not None:
+            if json.loads(result.text)['message'] == 'Done':
+                product = json.loads(result.text)['product']
+    except:
+        pass
+
+    return render(request, 'product_detail.html', {'product': product, 'rows': len(product['description'].split("\n"))})
 
 def products(request):
     global userLogged
@@ -60,11 +76,21 @@ def register_product(request):
         desc = request.GET["txtDesc"]
         price = request.GET["txtPrice"] # required
         stock = request.GET["txtStock"] # required
-        #urls = request.GET["urls"] # required
 
         if name == '' or desc == '' or price == '' or stock == '': # or urls == '':
             message = 'Please fill in all the data.'
         else:
+            # Upload system https://www.youtube.com/watch?v=Zx09vcYq1oc
+            #date1 = datetime.datetime.now()
+            #date = str(date1.year)+"-"+str(date1.month)+"-"+str(date1.day)
+            #message = '1'
+            #uploaded_file = request.FILEs['images_uploader']
+            #message = '2'
+            #fs = FileSystemStorage()
+            #message = '3'
+            #url = fs.url(fs.save(uploaded_file.name + date, uploaded_file))
+            #message = '4'
+
             new_product = {'name': name,
             'description': desc,
             'price': price,

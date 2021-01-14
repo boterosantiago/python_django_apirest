@@ -27,6 +27,7 @@ def addGetProducts():
             'code': product_auto_code(),
             "name": request.json['name'],
             'price': request.json['price'],
+            'description': request.json['description'],
             'stock': request.json['stock']
         }
 
@@ -37,7 +38,11 @@ def addGetProducts():
 @apirest.route('/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def productId(id):
     if request.method == 'GET':
-        return getProduct(id)
+        product = getProduct(id)
+        if product == 'not found':
+            return jsonify({'message': "None"})
+        else:
+            return jsonify({'product': product, 'message': "Done"})
     elif request.method == 'PUT':
         product = getProduct(id)
 
@@ -46,6 +51,7 @@ def productId(id):
 
         product['name'] = request.json['name']
         product['price'] = request.json['price']
+        product['description'] = request.json['description']
         product['stock'] = request.json['stock']
 
         return jsonify({'message': 'done', 'products': products})
