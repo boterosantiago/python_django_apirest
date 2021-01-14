@@ -43,19 +43,38 @@ def products(request):
             message = json.loads(result.text)['message']
             if message == 'done':
                 userLogged = request.GET["txtUserName"]
-                template = 'productsManager.html'
-                return redirect('/products')
+                return redirect('/register_product')
             else:
-                template = 'login.html'
                 userLogged = None
                 warning = 'Wrong username or password.'
         else:
-            template = 'login.html'
             userLogged = None
     else:
-        template = 'productsManager.html'
+        return redirect('/register_product')
 
-    return render(request, template, {'username': userLogged, 'message': warning})
+    return render(request, 'login.html', {'username': userLogged, 'message': warning})
+
+def register_product(request):
+    try:
+        name = request.GET["txtName"] # required
+        desc = request.GET["txtDesc"]
+        price = request.GET["txtPrice"] # required
+        stock = request.GET["txtStock"] # required
+        #urls = request.GET["urls"] # required
+
+        if name == '' or desc == '' or price == '' or stock == '': # or urls == '':
+            message = 'Please fill in all the data.'
+        else:
+            new_product = {'name': name,
+            'description': desc,
+            'price': price,
+            'stock': stock}
+            requests.post(url+'products', json=new_product)
+            message = "Done!"
+    except:
+        message = ''
+
+    return render(request, 'products_manager.html', {'message': message})
 
 def register(request):
     warning = ''
@@ -84,10 +103,3 @@ def register(request):
         pass
 
     return render(request, 'register.html', {'message': warning})
-
-'''
-'code': 1,
-'user': 'admin',
-'password': '78b0fb9876ff57129ea2e2c49a1b93d4f8c676c43d89b7c06c2ad4188acafcab',
-'admin': True
-'''

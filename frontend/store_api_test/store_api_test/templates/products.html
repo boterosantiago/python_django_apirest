@@ -190,7 +190,7 @@
 {% extends "body.html" %} {% block title %}Home{% endblock %} {% block content %}
 <section class="webdesigntuts-workshop">
     <!-- Copiado de https://cssdeck.com/labs/pulsating-css3-input-search-box -->
-    <form action="/products/" method="GET">
+    <form action="/home/" method="GET">
         <input type="search" name="txtName" placeholder="Search...">
         <button type='submit'>Search</button>
     </form>
@@ -212,7 +212,7 @@
             border-bottom: 2px solid black;" src="https://assets.stickpng.com/images/5848152fcef1014c0b5e4967.png" />
             <h1>{{p.name}}</h1>
             <h3>$ {{p.price}}</h3>
-            <h6>{{p.stock}}</h6>
+            <h6>Stock: {{p.stock}}</h6>
         </div>
         {% endfor %}
     </div>
